@@ -157,16 +157,16 @@ namespace BlackJack
                     
                 return true;
             }
-            //else if (PlayerOne.GetCardTotal == 21)
-            //{
-            //    message = "BlackJack";
+            else if (PlayerOne.GetCardTotal == 21)
+            {
+                message = "BlackJack";
 
-            //    UpdateFirstTwoCards();
+                UpdateFirstTwoCards();
 
-            //    StandEvent();
+                StandEvent();
 
-            //    return true;
-            //}
+                return true;
+            }
             else
                       
             return false;
