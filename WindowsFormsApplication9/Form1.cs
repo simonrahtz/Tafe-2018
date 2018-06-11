@@ -16,6 +16,7 @@ namespace BlackJack
         private const int bufferDimension = 2024;
         private Bitmap buffer;
         private Label label;
+        private Color Blue = Color.DodgerBlue;
         
         
         public Form1()
@@ -25,6 +26,7 @@ namespace BlackJack
             label = new Label();
             initGraphics();
             initialiseModel();
+            this.BackColor = Color.Green;
 
         }
 
@@ -33,12 +35,12 @@ namespace BlackJack
         {
 
             
-
             buffer = new Bitmap(bufferDimension,bufferDimension);
             this.Paint += Form1_Paint;
             this.Resize += Form1_Resize;
             this.DoubleBuffered = true;
-
+            
+            
             btnDeal.Enabled = true;
             btnHit.Enabled = false;
             btnStand.Enabled = false;
@@ -47,10 +49,13 @@ namespace BlackJack
             label.Font = new Font("Ariel", 15);
             this.Controls.Add(label);
 
+          
             Invalidate();
 
             
         }
+
+        
 
         private void Form1_Resize(object sender, EventArgs e)
         {
@@ -101,12 +106,7 @@ namespace BlackJack
         private void btnDeal_Click(object sender, EventArgs e)
         {
             
-
-            for (int i = 0; i < 2; i++) //deal 2 cards player and dealer
-            {
-                model.DealPlayer();
-                model.DealDealer();
-            }
+            model.Handle(new DealCards());
 
             btnDeal.Enabled = false;
             btnHit.Enabled = true;
@@ -114,7 +114,7 @@ namespace BlackJack
             
         }
 
-        private void ShowMessage(String text)
+        public void ShowMessage(String text)
         {
             
                
@@ -136,7 +136,7 @@ namespace BlackJack
                 initialiseModel();
 
         }
-        private void SetLabel(Label label,string text,int locationX,int locationY )
+        public void SetLabel(Label label,string text,int locationX,int locationY )
         {
             label.Location = new Point(locationX,locationY);
             label.Text = text;
@@ -145,25 +145,29 @@ namespace BlackJack
 
         private void btnHit_Click(object sender, EventArgs e)
         {
-            model.DealPlayer();
-            if (model.Result())
-            {
-                ShowMessage(model.Message);
+            model.Handle(new Hit());
+        }
                 
-            }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            
-        }
 
         private void btnStand_Click(object sender, EventArgs e)
         {
+            
             btnHit.Enabled = false;
-            model.StandEvent();
-            ShowMessage(model.Message);
+            model.Handle(new Stand());
             
         }
+
+        private void greenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.BackColor = Color.Green;
+        }
+
+        private void blueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.BackColor = Color.DodgerBlue;
+        }
+
+     
+        
     }
 }

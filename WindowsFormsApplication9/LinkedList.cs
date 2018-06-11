@@ -29,14 +29,7 @@ namespace BlackJack
 
 
             }
-            public LinkedList(T stuff)
-            {
-                Add(stuff);
-            }
-            public LinkedList()
-            {
-
-            }
+                        
 
             public void Add(T value)
             {
@@ -49,8 +42,7 @@ namespace BlackJack
             public void Remove(int index)
             {
                 Node prev = head, current;
-
-
+                
                 if (head != null)
                 {
                     if (index == 0)
@@ -72,7 +64,7 @@ namespace BlackJack
 
 
             }
-            public int GetValue(int value)
+            public int GetValue(int value) //change to generic
             {
                 int position = 1; //counter starts from head.next
 
@@ -143,5 +135,6 @@ namespace BlackJack
                     temp = temp.next;
                 }
             }
+            public void Sort() { }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace BlackJack
 {
@@ -26,6 +27,41 @@ namespace BlackJack
             Image cardImage = cardFace;
 
             view.DrawCard(cardImage, coord);
+        }
+    }
+    public class DrawMessageBox : ViewCommand
+
+    {
+        string message;
+
+        public DrawMessageBox(String message)
+        {
+            this.message = message;
+        }
+
+        public override void execute(IView view)
+        {
+            view.ShowMessage(message);
+        }
+    }
+    public class SetLabel : ViewCommand
+
+    {
+        Label label;
+        string text;
+        int locationX, locationY;
+
+        public SetLabel(Label label, string text, int locationX, int locationY)
+        {
+            this.label = label;
+            this.text = text;
+            this.locationX = locationX;
+            this.locationY = locationY;
+        }
+
+        public override void execute(IView view)
+        {
+            view.SetLabel(label, text, locationX, locationY);
         }
     }
 }

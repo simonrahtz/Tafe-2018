@@ -13,14 +13,19 @@ namespace BlackJack
         protected int cardTotal;
         protected int numCards;
         protected Point cardLocation;
+        protected string deckColour;
         
 
 
-        public Person(Point cardLocation)
+        public Person(Point cardLocation,string deckColour)
         {
             hand = new List<Card>();
             this.cardLocation = cardLocation;
+            this.deckColour = deckColour;
+
         }
+
+       
 
         public Point GetCardLocation()
         {
@@ -65,8 +70,9 @@ namespace BlackJack
     {
         private new Point cardLocation;
 
-        public Player(Point cardLocation) : base(cardLocation)
+        public Player(Point cardLocation, string deckColour) : base(cardLocation, deckColour)
         {
+            this.deckColour = deckColour;
             this.cardLocation = cardLocation;
         }
 
@@ -81,18 +87,18 @@ namespace BlackJack
     {
         private new Point cardLocation;
 
-        public Dealer(Point cardLocation) : base(cardLocation)
+        public Dealer(Point cardLocation, string deckColour) : base(cardLocation, deckColour)
         {
+            this.deckColour = deckColour;
             this.cardLocation = cardLocation;
         }
-
 
         public override Image GetCardFace()
         {
             
             if (numCards == 1)
             {
-                return Image.FromFile("card_back.png");
+                return Image.FromFile("card_back_" + deckColour + ".png");
             }
 
             return hand[hand.Count - 1].cardFace;

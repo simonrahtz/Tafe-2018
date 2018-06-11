@@ -9,40 +9,42 @@ namespace BlackJack
 {
     public class Model
     {
-        protected LinkedList<Card> deck;
-        protected List<Card> deck2;
+        private LinkedList<Card> deck;
         private CommandHandler<ViewCommand> commandHandler;
         private int cardIndex;
         private int deckSize; 
         private Random rnd;
-        private string message;
         private Player playerOne;
         private Dealer dealer;
             
 
-       
-
-        public string Message
-        {
-            get { return message;   }
-
-        }
-
         public Player PlayerOne
         {
-            get
-            {
-                return playerOne;
-            }
+            get { return playerOne; }
 
            
         }
+        public void Deal()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                UpdatePerson(dealer);
+                UpdatePerson(PlayerOne);
+            }
+        }
+        public void Hit()
+        {
+            UpdatePerson(playerOne);
+            Result();
+           
+
+        }
+        
 
         public Model(CommandHandler<ViewCommand> commandHandler)
         {
             this.commandHandler = commandHandler;
             deck = new LinkedList<Card>();
-            deck2 = new List<Card>();
             deckSize = 52;
             rnd = new Random();
             
@@ -60,52 +62,43 @@ namespace BlackJack
         {
                                
             CreateDeck();
-            playerOne = new Player(new Point(0,50));
-            dealer = new Dealer(new Point(400,50));
+            playerOne = new Player(new Point(0,70),"red");
+            dealer = new Dealer(new Point(400,70),"red");
             
         }
         
-        public void DealPlayer()
-        {
-            UpdatePerson(playerOne);
-        }
-
-        public void DealDealer()
-        {
-            UpdatePerson(dealer);
-        }
-
         public void StandEvent()
         {
             UpdateFirstTwoCards();
-                        
 
+            
             while (dealer.GetCardTotal < 17)
             {
-                DealDealer();
+                UpdatePerson(dealer);
                 
                 if (dealer.GetCardTotal > 21)
                 {
-                    message = "Dealer Total: " + dealer.GetCardTotal.ToString() + " Dealer Busts!";
+                    Update("Dealer Total: " + dealer.GetCardTotal.ToString() + " Dealer Busts!");
                     return;
                 }
             }
             
             switch (dealer.GetCardTotal.CompareTo(playerOne.GetCardTotal))
             {
-                case -1:message = "Dealer Total: " + dealer.GetCardTotal.ToString() + " You Win!";
+                case -1: Update("Dealer Total: " + dealer.GetCardTotal.ToString() + " You Win!");
                     break;
-                case 1:message = "Dealer Total: " + dealer.GetCardTotal.ToString() + " You Lose!";
+                case 1:  Update("Dealer Total: " + dealer.GetCardTotal.ToString() + " You Lose!");
                     break;
-                case 0:message = "Dealer Total: " + dealer.GetCardTotal.ToString() + " Push";
+                case 0:  Update("Dealer Total: " + dealer.GetCardTotal.ToString() + " Push");
                     break;
                 default:
                     break;
             }
-
             
+            
+
         }
-        public void UpdateFirstTwoCards()
+        private void UpdateFirstTwoCards()
         {
             dealer.SetCardLocation(400);
 
@@ -120,19 +113,18 @@ namespace BlackJack
 
 
         
-        public void UpdatePerson(Person person)
+       public void UpdatePerson(Person person)
         {
             cardIndex = rnd.Next(deckSize);
             deckSize--;
             person.AddCard(deck.Get(cardIndex));
-            
-            
+                        
             Update(person.GetCardLocation(),person.GetCardFace());
         }
        
                 
        
-        public void CreateDeck()
+        private void CreateDeck()
         {
             
             for (Value value = Value.ace; value <= Value.king; value++)
@@ -140,7 +132,6 @@ namespace BlackJack
                 for (Suit suit = Suit.hearts; suit <= Suit.clubs; suit++)
                 {
                     deck.Add(new Card(suit, value));
-                    deck2.Add(new Card(suit, value));
                 }
             }
             
@@ -151,17 +142,18 @@ namespace BlackJack
 
             if (PlayerOne.GetCardTotal > 21)
             {
-                message = "Bust";
-
                 UpdateFirstTwoCards();
+                Update("Bust");
+
+                
                     
                 return true;
             }
             else if (PlayerOne.GetCardTotal == 21)
             {
-                message = "BlackJack";
-
                 UpdateFirstTwoCards();
+                Update("BlackJack");
+                                
 
                 StandEvent();
 
@@ -175,12 +167,16 @@ namespace BlackJack
         }
        
 
-        public void Update(Point coord,Image cardFace)
+        private void Update(Point coord,Image cardFace)
         {
             commandHandler.Handle(new DrawCardCommand(coord, cardFace)); //draw random card from deck
 
             deck.Remove(cardIndex);  
             
+        }
+        private void Update(string message)
+        {
+            commandHandler.Handle(new DrawMessageBox(message));
         }
     }
 }
